@@ -37,6 +37,22 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+class CartItem {
+  final String id;
+  final String imageUrl;
+  final String title;
+  final String price;
+  int quantity;
+
+  CartItem({
+    required this.id,
+    required this.imageUrl,
+    required this.title,
+    required this.price,
+    required this.quantity,
+  });
+}
+
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   bool _isSearching = false;
@@ -48,6 +64,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _cartAnimationController;
   late Animation<double> _cartWidthAnimation;
   late Animation<double> _cartHeightAnimation;
+  
+  // Cart items
+  List<CartItem> _cartItems = [
+    CartItem(
+      id: '1',
+      imageUrl: 'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
+      title: 'Tweed Waistcoat',
+      price: '\$29.00',
+      quantity: 1,
+    ),
+    CartItem(
+      id: '2',
+      imageUrl: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
+      title: 'Denim Jacket',
+      price: '\$34.90',
+      quantity: 2,
+    ),
+  ];
 
   @override
   void initState() {
@@ -111,6 +145,58 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _cartAnimationController.reverse();
       }
     });
+  }
+
+  Future<void> _confirmDeleteItem(CartItem item) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Remove Item',
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to remove "${item.title}" from your cart?',
+          style: GoogleFonts.inter(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: Text(
+              'Remove',
+              style: GoogleFonts.inter(
+                color: Colors.red,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete == true) {
+      setState(() {
+        _cartItems.removeWhere((cartItem) => cartItem.id == item.id);
+      });
+    }
   }
 
   @override
@@ -676,23 +762,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               (_cartHeightAnimation.value -
                                                   0.3) /
                                               0.7,
-                                          child: ListView(
+                                          child: ListView.separated(
                                             padding: const EdgeInsets.all(16),
-                                            children: [
-                                              _buildCartItem(
-                                                'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
-                                                'Tweed Waistcoat',
-                                                '\$29.00',
-                                                1,
-                                              ),
-                                              const SizedBox(height: 12),
-                                              _buildCartItem(
-                                                'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
-                                                'Denim Jacket',
-                                                '\$34.90',
-                                                2,
-                                              ),
-                                            ],
+                                            itemCount: _cartItems.length,
+                                            separatorBuilder: (context, index) =>
+                                                const SizedBox(height: 12),
+                                            itemBuilder: (context, index) {
+                                              final item = _cartItems[index];
+                                              return Dismissible(
+                                                key: Key(item.id),
+                                                direction: DismissDirection.endToStart,
+                                                confirmDismiss: (direction) async {
+                                                  return false; // Don't auto delete
+                                                },
+                                                background: Container(
+                                                  alignment: Alignment.centerRight,
+                                                  padding: const EdgeInsets.only(right: 20),
+                                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius: BorderRadius.circular(16),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.delete,
+                                                    color: Colors.white,
+                                                    size: 28,
+                                                  ),
+                                                ),
+                                                onDismissed: (direction) {},
+                                                child: GestureDetector(
+                                                  onHorizontalDragEnd: (details) {
+                                                    if (details.primaryVelocity! < 0) {
+                                                      // Swiped left
+                                                      _confirmDeleteItem(item);
+                                                    }
+                                                  },
+                                                  child: _buildCartItem(item),
+                                                ),
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
@@ -781,39 +889,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
         ),
       ),
-      bottomNavigationBar: AnimatedOpacity(
-        opacity: (_isSearching || _isCartOpen) ? 0.0 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        child: AnimatedSlide(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          offset: (_isSearching || _isCartOpen)
-              ? const Offset(0, 1) // Slide down
-              : const Offset(0, 0), // Normal position
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
             ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildNavItem(Icons.home_filled, 0),
-                    _buildNavItem(Icons.favorite_border, 1),
-                    _buildNavItem(Icons.shopping_bag_outlined, 2),
-                    _buildNavItem(Icons.person_outline, 3),
-                  ],
-                ),
-              ),
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(Icons.home_filled, 0),
+                _buildNavItem(Icons.favorite_border, 1),
+                _buildNavItem(Icons.shopping_bag_outlined, 2),
+                _buildNavItem(Icons.person_outline, 3),
+              ],
             ),
           ),
         ),
@@ -843,12 +940,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCartItem(
-    String imageUrl,
-    String title,
-    String price,
-    int quantity,
-  ) {
+  Widget _buildCartItem(CartItem item) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -861,7 +953,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: CachedNetworkImage(
-              imageUrl: imageUrl,
+              imageUrl: item.imageUrl,
               width: 70,
               height: 70,
               fit: BoxFit.cover,
@@ -877,7 +969,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  item.title,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -887,7 +979,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  price,
+                  item.price,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -910,7 +1002,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
-                        '$quantity',
+                        '${item.quantity}',
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -934,15 +1026,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ],
             ),
-          ),
-
-          // Delete Button
-          IconButton(
-            icon: const Icon(Icons.delete_outline, size: 20),
-            color: Colors.grey,
-            onPressed: () {},
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
           ),
         ],
       ),
