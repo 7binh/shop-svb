@@ -781,34 +781,38 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
         ),
       ),
-      bottomNavigationBar: AnimatedSlide(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        offset: (_isSearching || _isCartOpen) 
-            ? const Offset(0, 1) // Slide down
-            : const Offset(0, 0), // Normal position
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(Icons.home_filled, 0),
-                  _buildNavItem(Icons.favorite_border, 1),
-                  _buildNavItem(Icons.shopping_bag_outlined, 2),
-                  _buildNavItem(Icons.person_outline, 3),
-                ],
+      bottomNavigationBar: AnimatedOpacity(
+        opacity: (_isSearching || _isCartOpen) ? 0.0 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: AnimatedSlide(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          offset: (_isSearching || _isCartOpen)
+              ? const Offset(0, 1) // Slide down
+              : const Offset(0, 0), // Normal position
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(Icons.home_filled, 0),
+                    _buildNavItem(Icons.favorite_border, 1),
+                    _buildNavItem(Icons.shopping_bag_outlined, 2),
+                    _buildNavItem(Icons.person_outline, 3),
+                  ],
+                ),
               ),
             ),
           ),
