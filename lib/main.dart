@@ -761,8 +761,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     });
                                                   }
                                                 },
-                                                child: Stack(
-                                                  children: [
+                                                child: ClipRect(
+                                                  child: Stack(
+                                                    children: [
                                                     // Background delete button
                                                     Positioned.fill(
                                                       child: Container(
@@ -836,6 +837,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       ),
                                                     ),
                                                   ],
+                                                  ),
                                                 ),
                                               );
                                             },
