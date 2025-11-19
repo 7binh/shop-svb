@@ -64,19 +64,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _cartAnimationController;
   late Animation<double> _cartWidthAnimation;
   late Animation<double> _cartHeightAnimation;
-  
+
   // Cart items
   List<CartItem> _cartItems = [
     CartItem(
       id: '1',
-      imageUrl: 'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
+      imageUrl:
+          'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
       title: 'Tweed Waistcoat',
       price: '\$29.00',
       quantity: 1,
     ),
     CartItem(
       id: '2',
-      imageUrl: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
+      imageUrl:
+          'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
       title: 'Denim Jacket',
       price: '\$34.90',
       quantity: 2,
@@ -151,14 +153,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           'Remove Item',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w700,
-          ),
+          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
         ),
         content: Text(
           'Are you sure you want to remove "${item.title}" from your cart?',
@@ -177,9 +175,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: Text(
               'Remove',
               style: GoogleFonts.inter(
@@ -765,40 +761,63 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           child: ListView.separated(
                                             padding: const EdgeInsets.all(16),
                                             itemCount: _cartItems.length,
-                                            separatorBuilder: (context, index) =>
-                                                const SizedBox(height: 12),
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    const SizedBox(height: 12),
                                             itemBuilder: (context, index) {
                                               final item = _cartItems[index];
                                               return Dismissible(
                                                 key: Key(item.id),
-                                                direction: DismissDirection.endToStart,
+                                                direction:
+                                                    DismissDirection.endToStart,
+                                                dismissThresholds: const {
+                                                  DismissDirection.endToStart: 0.5,
+                                                },
                                                 confirmDismiss: (direction) async {
-                                                  return false; // Don't auto delete
+                                                  return false; // Don't auto delete, show button instead
                                                 },
                                                 background: Container(
-                                                  alignment: Alignment.centerRight,
-                                                  padding: const EdgeInsets.only(right: 20),
-                                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        right: 20,
+                                                      ),
                                                   decoration: BoxDecoration(
                                                     color: Colors.red,
-                                                    borderRadius: BorderRadius.circular(16),
+                                                    borderRadius:
+                                                        BorderRadius.circular(16),
                                                   ),
-                                                  child: const Icon(
-                                                    Icons.delete,
-                                                    color: Colors.white,
-                                                    size: 28,
-                                                  ),
-                                                ),
-                                                onDismissed: (direction) {},
-                                                child: GestureDetector(
-                                                  onHorizontalDragEnd: (details) {
-                                                    if (details.primaryVelocity! < 0) {
-                                                      // Swiped left
+                                                  child: GestureDetector(
+                                                    onTap: () {
                                                       _confirmDeleteItem(item);
-                                                    }
-                                                  },
-                                                  child: _buildCartItem(item),
+                                                    },
+                                                    child: Container(
+                                                      width: 80,
+                                                      alignment: Alignment.center,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.white,
+                                                            size: 28,
+                                                          ),
+                                                          const SizedBox(height: 4),
+                                                          Text(
+                                                            'Delete',
+                                                            style: GoogleFonts.inter(
+                                                              color: Colors.white,
+                                                              fontSize: 12,
+                                                              fontWeight: FontWeight.w600,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
+                                                child: _buildCartItem(item),
                                               );
                                             },
                                           ),
