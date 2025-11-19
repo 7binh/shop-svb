@@ -304,7 +304,32 @@ class _HomePageState extends State<HomePage>
               ],
             ),
 
-            // Fixed Header on top
+            // Blur Overlay when searching - Before header so header stays clear
+            if (_isSearching)
+              Positioned.fill(
+                top: 100,
+                child: GestureDetector(
+                  onTap: _toggleSearch,
+                  child: AnimatedBuilder(
+                    animation: _searchAnimation,
+                    builder: (context, child) {
+                      return BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 8.0 * _searchAnimation.value,
+                          sigmaY: 8.0 * _searchAnimation.value,
+                        ),
+                        child: Container(
+                          color: Colors.black.withOpacity(
+                            0.5 * _searchAnimation.value,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+
+            // Fixed Header on top - After blur so it stays on top and clear
             Positioned(
               top: 0,
               left: 0,
@@ -448,29 +473,6 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             ),
-
-            // Blur Overlay when searching
-            if (_isSearching)
-              Positioned.fill(
-                top: 100,
-                child: GestureDetector(
-                  onTap: _toggleSearch,
-                  child: AnimatedBuilder(
-                    animation: _searchAnimation,
-                    builder: (context, child) {
-                      return BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 8.0 * _searchAnimation.value,
-                          sigmaY: 8.0 * _searchAnimation.value,
-                        ),
-                        child: Container(
-                          color: Colors.black.withOpacity(0.5 * _searchAnimation.value),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
           ],
         ),
       ),
