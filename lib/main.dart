@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'YUMI Shop',
+      title: 'GetDealsFromUSA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -38,26 +39,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  bool _isSearchActive = false;
-  late AnimationController _searchAnimationController;
-  late Animation<double> _searchAnimation;
+  bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+  late AnimationController _searchAnimationController;
+  late Animation<double> _searchAnimation;
 
   @override
   void initState() {
     super.initState();
     _searchAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
       vsync: this,
+      duration: const Duration(milliseconds: 300),
     );
     _searchAnimation = CurvedAnimation(
       parent: _searchAnimationController,
       curve: Curves.easeInOut,
     );
-    _searchController.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
@@ -70,10 +68,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void _toggleSearch() {
     setState(() {
-      _isSearchActive = !_isSearchActive;
-      if (_isSearchActive) {
+      _isSearching = !_isSearching;
+      if (_isSearching) {
         _searchAnimationController.forward();
-        Future.delayed(const Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 200), () {
           _searchFocusNode.requestFocus();
         });
       } else {
@@ -305,22 +303,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ],
             ),
 
-            // Overlay mờ khi search active
-            if (_isSearchActive)
-              Positioned.fill(
-                child: GestureDetector(
-                  onTap: _toggleSearch,
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: _isSearchActive ? 1.0 : 0.0,
-                    child: Container(
-                      color: Colors.black.withOpacity(0.5),
-                      margin: const EdgeInsets.only(top: 100),
-                    ),
-                  ),
-                ),
-              ),
-
             // Fixed Header on top
             Positioned(
               top: 0,
@@ -340,156 +322,143 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: AnimatedBuilder(
-                      animation: _searchAnimation,
-                      builder: (context, child) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Search button/bar
-                            Expanded(
-                              flex: _isSearchActive ? 1 : 0,
-                              child: GestureDetector(
-                                onTap: _isSearchActive ? null : _toggleSearch,
-                                child: Container(
-                                  height: 44,
-                                  constraints: BoxConstraints(
-                                    minWidth: 44,
-                                    maxWidth: _isSearchActive
-                                        ? double.infinity
-                                        : 44,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Search Button with Animation
+                        AnimatedBuilder(
+                          animation: _searchAnimation,
+                          builder: (context, child) {
+                            return Container(
+                              width: 44 + (MediaQuery.of(context).size.width - 44 - 32) * _searchAnimation.value,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(22),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                      _isSearchActive ? 24 : 22,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: _isSearchActive
-                                      ? Row(
-                                          children: [
-                                            const SizedBox(width: 16),
-                                            const Icon(
-                                              Icons.search,
-                                              size: 22,
-                                              color: Colors.grey,
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: TextField(
-                                                controller: _searchController,
-                                                focusNode: _searchFocusNode,
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  hintText: 'Search products...',
-                                                  hintStyle: GoogleFonts.inter(
-                                                    color: Colors.grey,
-                                                    fontSize: 16,
-                                                  ),
-                                                  border: InputBorder.none,
-                                                  isDense: true,
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                ),
+                                ],
+                              ),
+                              child: _isSearching
+                                  ? Row(
+                                      children: [
+                                        const SizedBox(width: 12),
+                                        const Icon(Icons.search, size: 22),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _searchController,
+                                            focusNode: _searchFocusNode,
+                                            decoration: InputDecoration(
+                                              hintText: 'Search products...',
+                                              hintStyle: GoogleFonts.inter(
+                                                fontSize: 14,
+                                                color: Colors.grey,
                                               ),
+                                              border: InputBorder.none,
+                                              isDense: true,
                                             ),
-                                            if (_searchController
-                                                .text.isNotEmpty)
-                                              GestureDetector(
-                                                onTap: () {
-                                                  _searchController.clear();
-                                                  setState(() {});
-                                                },
-                                                child: const Icon(
-                                                  Icons.clear,
-                                                  size: 20,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            const SizedBox(width: 12),
-                                            GestureDetector(
-                                              onTap: _toggleSearch,
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Text(
-                                                  'Cancel',
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
+                                            style: GoogleFonts.inter(
+                                              fontSize: 14,
+                                              color: Colors.black,
                                             ),
-                                            const SizedBox(width: 8),
-                                          ],
-                                        )
-                                      : const Center(
-                                          child: Icon(
-                                            Icons.search,
-                                            size: 22,
                                           ),
                                         ),
+                                        IconButton(
+                                          icon: const Icon(Icons.close, size: 20),
+                                          onPressed: _toggleSearch,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                        const SizedBox(width: 12),
+                                      ],
+                                    )
+                                  : GestureDetector(
+                                      onTap: _toggleSearch,
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: const Center(
+                                          child: Icon(Icons.search, size: 22),
+                                        ),
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                        
+                        // Shop Name - Hidden when searching
+                        if (!_isSearching)
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                'GetDealsFromUSA',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.3,
+                                  color: Colors.black,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-
-                            // Logo và notification (ẩn khi search active)
-                            if (!_isSearchActive) ...[
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    'YUMI Shop',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 0.5,
-                                      color: Colors.black,
-                                    ),
-                                  ),
+                          ),
+                        
+                        // Notification Button - Hidden when searching
+                        if (!_isSearching)
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: const Icon(
-                                  Icons.notifications_outlined,
-                                  size: 22,
-                                ),
-                              ),
-                            ],
-                          ],
-                        );
-                      },
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.notifications_outlined,
+                              size: 22,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
+            
+            // Blur Overlay when searching
+            if (_isSearching)
+              Positioned.fill(
+                top: 100,
+                child: GestureDetector(
+                  onTap: _toggleSearch,
+                  child: AnimatedOpacity(
+                    opacity: _searchAnimation.value,
+                    duration: const Duration(milliseconds: 300),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.3),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 5.0 * _searchAnimation.value,
+                          sigmaY: 5.0 * _searchAnimation.value,
+                        ),
+                        child: Container(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -525,7 +494,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget _buildCategoryChip(String label, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: isSelected ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(24),
@@ -537,7 +506,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             color: isSelected ? Colors.white : Colors.black,
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            height: 1.2,
+            height: 1.0,
           ),
         ),
       ),
