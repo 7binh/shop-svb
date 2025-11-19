@@ -238,12 +238,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               const SizedBox(height: 20),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 14,
+                                  horizontal: 28,
+                                  vertical: 16,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.black,
-                                  borderRadius: BorderRadius.circular(28),
+                                  borderRadius: BorderRadius.circular(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -252,15 +259,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       'Shop now',
                                       style: GoogleFonts.inter(
                                         color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: 10),
                                     const Icon(
                                       Icons.arrow_forward,
                                       color: Colors.white,
-                                      size: 18,
+                                      size: 20,
                                     ),
                                   ],
                                 ),
@@ -698,11 +705,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             GestureDetector(
                                               onTap: _toggleCart,
                                               child: Container(
-                                                width: 32,
-                                                height: 32,
+                                                width: 36,
+                                                height: 36,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
+                                                  color: const Color(0xFFF0F0F0),
                                                   shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black.withOpacity(0.06),
+                                                      blurRadius: 6,
+                                                      offset: const Offset(0, 2),
+                                                    ),
+                                                  ],
                                                 ),
                                                 child: const Icon(
                                                   Icons.close,
@@ -764,79 +778,81 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 child: ClipRect(
                                                   child: Stack(
                                                     children: [
-                                                    // Background delete button
-                                                    Positioned.fill(
-                                                      child: Container(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        padding:
-                                                            const EdgeInsets.only(
-                                                              right: 20,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.red,
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                16,
+                                                      // Background delete button
+                                                      Positioned.fill(
+                                                        child: Container(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          padding:
+                                                              const EdgeInsets.only(
+                                                                right: 20,
                                                               ),
-                                                        ),
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            _deleteItem(item);
-                                                          },
-                                                          child: Container(
-                                                            width: 80,
-                                                            color: Colors
-                                                                .transparent,
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                const Icon(
-                                                                  Icons.delete,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  size: 28,
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  16,
                                                                 ),
-                                                                const SizedBox(
-                                                                  height: 4,
-                                                                ),
-                                                                Text(
-                                                                  'Delete',
-                                                                  style: GoogleFonts.inter(
+                                                          ),
+                                                          child: GestureDetector(
+                                                            onTap: () {
+                                                              _deleteItem(item);
+                                                            },
+                                                            child: Container(
+                                                              width: 80,
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  const Icon(
+                                                                    Icons
+                                                                        .delete,
                                                                     color: Colors
                                                                         .white,
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
+                                                                    size: 28,
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                  const SizedBox(
+                                                                    height: 4,
+                                                                  ),
+                                                                  Text(
+                                                                    'Delete',
+                                                                    style: GoogleFonts.inter(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    // Sliding item
-                                                    AnimatedContainer(
-                                                      duration: const Duration(
-                                                        milliseconds: 250,
+                                                      // Sliding item
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                              milliseconds: 250,
+                                                            ),
+                                                        curve: Curves.easeOut,
+                                                        transform:
+                                                            Matrix4.translationValues(
+                                                              isOpen ? -100 : 0,
+                                                              0,
+                                                              0,
+                                                            ),
+                                                        child: _buildCartItem(
+                                                          item,
+                                                        ),
                                                       ),
-                                                      curve: Curves.easeOut,
-                                                      transform:
-                                                          Matrix4.translationValues(
-                                                            isOpen ? -100 : 0,
-                                                            0,
-                                                            0,
-                                                          ),
-                                                      child: _buildCartItem(
-                                                        item,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                    ],
                                                   ),
                                                 ),
                                               );
@@ -851,13 +867,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             (_cartHeightAnimation.value - 0.3) /
                                             0.7,
                                         child: Container(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(20),
                                           decoration: BoxDecoration(
-                                            color: Colors.grey.shade50,
+                                            color: const Color(0xFFF8F8F8),
                                             borderRadius:
                                                 const BorderRadius.vertical(
                                                   bottom: Radius.circular(22),
                                                 ),
+                                            border: Border(
+                                              top: BorderSide(
+                                                color: Colors.grey.shade200,
+                                                width: 1,
+                                              ),
+                                            ),
                                           ),
                                           child: Column(
                                             children: [
@@ -869,38 +891,46 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   Text(
                                                     'Total',
                                                     style: GoogleFonts.inter(
-                                                      fontSize: 16,
+                                                      fontSize: 17,
                                                       fontWeight:
                                                           FontWeight.w600,
+                                                      color: Colors.grey.shade700,
                                                     ),
                                                   ),
                                                   Text(
                                                     '\$98.80',
                                                     style: GoogleFonts.inter(
-                                                      fontSize: 20,
+                                                      fontSize: 24,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                          FontWeight.w800,
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              const SizedBox(height: 12),
+                                              const SizedBox(height: 16),
                                               Container(
                                                 width: double.infinity,
-                                                height: 50,
+                                                height: 56,
                                                 decoration: BoxDecoration(
                                                   color: Colors.black,
                                                   borderRadius:
-                                                      BorderRadius.circular(25),
+                                                      BorderRadius.circular(28),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black.withOpacity(0.3),
+                                                      blurRadius: 12,
+                                                      offset: const Offset(0, 4),
+                                                    ),
+                                                  ],
                                                 ),
                                                 child: Center(
                                                   child: Text(
                                                     'Checkout',
                                                     style: GoogleFonts.inter(
                                                       color: Colors.white,
-                                                      fontSize: 16,
+                                                      fontSize: 17,
                                                       fontWeight:
-                                                          FontWeight.w600,
+                                                          FontWeight.w700,
                                                     ),
                                                   ),
                                                 ),
@@ -961,10 +991,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildCategoryChip(String label, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
       decoration: BoxDecoration(
         color: isSelected ? Colors.black : Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Center(
         child: Text(
@@ -972,7 +1009,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           style: GoogleFonts.inter(
             color: isSelected ? Colors.white : Colors.black,
             fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             height: 1.0,
           ),
         ),
@@ -982,16 +1019,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _buildCartItem(CartItem item) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
           // Product Image
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             child: CachedNetworkImage(
               imageUrl: item.imageUrl,
               width: 70,
@@ -1031,11 +1079,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 Row(
                   children: [
                     Container(
-                      width: 28,
-                      height: 28,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
                       child: const Icon(Icons.remove, size: 16),
                     ),
@@ -1044,17 +1103,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       child: Text(
                         '${item.quantity}',
                         style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                     Container(
-                      width: 28,
-                      height: 28,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(
                         color: Colors.black,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: const Icon(
                         Icons.add,
@@ -1082,7 +1148,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1093,7 +1166,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
+                    top: Radius.circular(24),
                   ),
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
@@ -1105,36 +1178,50 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 if (isLimited)
                   Positioned(
-                    top: 8,
-                    left: 8,
+                    top: 10,
+                    left: 10,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
+                        horizontal: 12,
+                        vertical: 7,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.black,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: Text(
                         'limited edition',
                         style: GoogleFonts.inter(
                           color: Colors.white,
                           fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ),
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: 10,
+                  right: 10,
                   child: Container(
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
