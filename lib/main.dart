@@ -42,64 +42,30 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              // Custom Header
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.search, size: 24),
-                      ),
-                      Text(
-                        'YUMI Shop',
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.notifications_outlined, size: 24),
-                      ),
-                    ],
-                  ),
+        value: SystemUiOverlayStyle.light,
+        child: Stack(
+          children: [
+            // Main Content
+            CustomScrollView(
+              slivers: [
+                // Spacer for fixed header
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 0),
                 ),
-              ),
 
-              // Hero Banner
-              SliverToBoxAdapter(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE8E8E8),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Stack(
-                    children: [
-                      // Background Image
-                      Positioned.fill(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
+                // Hero Banner - starts from top
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 340,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE8E8E8),
+                    ),
+                    child: Stack(
+                      children: [
+                        // Background Image
+                        Positioned.fill(
                           child: CachedNetworkImage(
                             imageUrl: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
                             fit: BoxFit.cover,
@@ -108,76 +74,89 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                      ),
-                      // Gradient Overlay
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.white.withOpacity(0.9),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Content
-                      Positioned(
-                        left: 24,
-                        top: 32,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'MEET THE NEW\nAUTUMN\nCOLLECTION',
-                              style: GoogleFonts.inter(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                height: 1.2,
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Shop now',
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
+                        // Gradient Overlay
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  Colors.white.withOpacity(0.9),
+                                  Colors.transparent,
                                 ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                        // Bottom rounded corner overlay
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 30,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFF8F8F8),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Content
+                        Positioned(
+                          left: 24,
+                          bottom: 80,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'MEET THE NEW\nAUTUMN\nCOLLECTION',
+                                style: GoogleFonts.inter(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.2,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(28),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Shop now',
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
               // Popular Categories
               SliverToBoxAdapter(
@@ -285,8 +264,84 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-        ),
+
+          // Fixed Header on top
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.3),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(Icons.search, size: 24),
+                    ),
+                    Text(
+                      'YUMI Shop',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.3),
+                            offset: const Offset(0, 2),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(Icons.notifications_outlined, size: 24),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+    ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
