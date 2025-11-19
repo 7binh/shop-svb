@@ -84,6 +84,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       quantity: 2,
     ),
   ];
+  
+  String? _swipedItemId; // Track which item is swiped open
 
   @override
   void initState() {
@@ -191,6 +193,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (shouldDelete == true) {
       setState(() {
         _cartItems.removeWhere((cartItem) => cartItem.id == item.id);
+        _swipedItemId = null; // Reset swipe state
       });
     }
   }
@@ -766,58 +769,84 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     const SizedBox(height: 12),
                                             itemBuilder: (context, index) {
                                               final item = _cartItems[index];
-                                              return Dismissible(
-                                                key: Key(item.id),
-                                                direction:
-                                                    DismissDirection.endToStart,
-                                                dismissThresholds: const {
-                                                  DismissDirection.endToStart: 0.5,
+                                              final isOpen = _swipedItemId == item.id;
+                                              
+                                              return GestureDetector(
+                                                onHorizontalDragUpdate: (details) {
+                                                  if (details.delta.dx < -5) {
+                                                    // Swiping left
+                                                    setState(() {
+                                                      _swipedItemId = item.id;
+                                                    });
+                                                  } else if (details.delta.dx > 5 && isOpen) {
+                                                    // Swiping right when open
+                                                    setState(() {
+                                                      _swipedItemId = null;
+                                                    });
+                                                  }
                                                 },
-                                                confirmDismiss: (direction) async {
-                                                  return false; // Don't auto delete, show button instead
+                                                onTap: () {
+                                                  // Close when tap on item
+                                                  if (isOpen) {
+                                                    setState(() {
+                                                      _swipedItemId = null;
+                                                    });
+                                                  }
                                                 },
-                                                background: Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        right: 20,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.red,
-                                                    borderRadius:
-                                                        BorderRadius.circular(16),
-                                                  ),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      _confirmDeleteItem(item);
-                                                    },
-                                                    child: Container(
-                                                      width: 80,
-                                                      alignment: Alignment.center,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          const Icon(
-                                                            Icons.delete,
-                                                            color: Colors.white,
-                                                            size: 28,
-                                                          ),
-                                                          const SizedBox(height: 4),
-                                                          Text(
-                                                            'Delete',
-                                                            style: GoogleFonts.inter(
-                                                              color: Colors.white,
-                                                              fontSize: 12,
-                                                              fontWeight: FontWeight.w600,
+                                                child: Stack(
+                                                  children: [
+                                                    // Background delete button
+                                                    Positioned.fill(
+                                                      child: Container(
+                                                        alignment: Alignment.centerRight,
+                                                        padding: const EdgeInsets.only(right: 20),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius: BorderRadius.circular(16),
+                                                        ),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            _confirmDeleteItem(item);
+                                                          },
+                                                          child: Container(
+                                                            width: 80,
+                                                            color: Colors.transparent,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                const Icon(
+                                                                  Icons.delete,
+                                                                  color: Colors.white,
+                                                                  size: 28,
+                                                                ),
+                                                                const SizedBox(height: 4),
+                                                                Text(
+                                                                  'Delete',
+                                                                  style: GoogleFonts.inter(
+                                                                    color: Colors.white,
+                                                                    fontSize: 12,
+                                                                    fontWeight: FontWeight.w600,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                        ],
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+                                                    // Sliding item
+                                                    AnimatedContainer(
+                                                      duration: const Duration(milliseconds: 250),
+                                                      curve: Curves.easeOut,
+                                                      transform: Matrix4.translationValues(
+                                                        isOpen ? -100 : 0,
+                                                        0,
+                                                        0,
+                                                      ),
+                                                      child: _buildCartItem(item),
+                                                    ),
+                                                  ],
                                                 ),
-                                                child: _buildCartItem(item),
                                               );
                                             },
                                           ),
