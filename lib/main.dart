@@ -304,10 +304,9 @@ class _HomePageState extends State<HomePage>
               ],
             ),
 
-            // Blur Overlay when searching - Before header so header stays clear
+            // Blur Overlay when searching - Covers everything except search bar
             if (_isSearching)
               Positioned.fill(
-                top: 100,
                 child: GestureDetector(
                   onTap: _toggleSearch,
                   child: AnimatedBuilder(
@@ -334,24 +333,23 @@ class _HomePageState extends State<HomePage>
               top: 0,
               left: 0,
               right: 0,
-              child: AnimatedBuilder(
-                animation: _searchAnimation,
-                builder: (context, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white.withOpacity(0.95 * (1 - _searchAnimation.value)),
-                          Colors.white.withOpacity(0.0),
-                        ],
+              child: Container(
+                decoration: _isSearching
+                    ? null
+                    : BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withOpacity(0.95),
+                            Colors.white.withOpacity(0.0),
+                          ],
+                        ),
                       ),
-                    ),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: _isSearching
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _isSearching
                         ? AnimatedBuilder(
                             animation: _searchAnimation,
                             builder: (context, child) {
@@ -472,10 +470,8 @@ class _HomePageState extends State<HomePage>
                               ),
                             ],
                           ),
-                      ),
-                    ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
           ],
@@ -484,12 +480,13 @@ class _HomePageState extends State<HomePage>
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border(
-            top: BorderSide(
-              color: Colors.grey.withOpacity(0.1),
-              width: 0.5,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
             ),
-          ),
+          ],
         ),
         child: SafeArea(
           child: Padding(
