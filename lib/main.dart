@@ -349,75 +349,26 @@ class _HomePageState extends State<HomePage>
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: _isSearching
-                        ? AnimatedBuilder(
-                            animation: _searchAnimation,
-                            builder: (context, child) {
-                              return Container(
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(22),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 12),
-                                    const Icon(Icons.search, size: 22),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _searchController,
-                                        focusNode: _searchFocusNode,
-                                        decoration: InputDecoration(
-                                          hintText: 'Search products...',
-                                          hintStyle: GoogleFonts.inter(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                          border: InputBorder.none,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                        style: GoogleFonts.inter(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.close, size: 20),
-                                      onPressed: _toggleSearch,
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 40,
-                                        minHeight: 40,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                  ],
-                                ),
-                              );
-                            },
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Search Button
-                              GestureDetector(
-                                onTap: _toggleSearch,
+                    child: AnimatedBuilder(
+                      animation: _searchAnimation,
+                      builder: (context, child) {
+                        final screenWidth = MediaQuery.of(context).size.width - 32;
+                        final searchWidth = 44 + (screenWidth - 44) * _searchAnimation.value;
+                        
+                        return Stack(
+                          children: [
+                            // Search Button/Bar - Animates from left
+                            Positioned(
+                              left: 0,
+                              top: 0,
+                              child: GestureDetector(
+                                onTap: _isSearching ? null : _toggleSearch,
                                 child: Container(
-                                  width: 44,
+                                  width: searchWidth,
                                   height: 44,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(22),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.1),
@@ -426,50 +377,125 @@ class _HomePageState extends State<HomePage>
                                       ),
                                     ],
                                   ),
-                                  child: const Center(
-                                    child: Icon(Icons.search, size: 22),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 12),
+                                      const Icon(Icons.search, size: 22),
+                                      if (_searchAnimation.value > 0.3) ...[
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Opacity(
+                                            opacity: (_searchAnimation.value - 0.3) / 0.7,
+                                            child: TextField(
+                                              controller: _searchController,
+                                              focusNode: _searchFocusNode,
+                                              decoration: InputDecoration(
+                                                hintText: 'Search products...',
+                                                hintStyle: GoogleFonts.inter(
+                                                  fontSize: 14,
+                                                  color: Colors.grey,
+                                                ),
+                                                border: InputBorder.none,
+                                                isDense: true,
+                                                contentPadding: EdgeInsets.zero,
+                                              ),
+                                              style: GoogleFonts.inter(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Opacity(
+                                          opacity: (_searchAnimation.value - 0.3) / 0.7,
+                                          child: IconButton(
+                                            icon: const Icon(Icons.close, size: 20),
+                                            onPressed: _toggleSearch,
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(
+                                              minWidth: 40,
+                                              minHeight: 40,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ),
-
-                              // Shop Name
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    'GetDealsFromUSA',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 0.3,
-                                      color: Colors.black,
+                            ),
+                            
+                            // Shop Name - Fades out and moves
+                            if (_searchAnimation.value < 0.7)
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                child: IgnorePointer(
+                                  ignoring: _searchAnimation.value > 0,
+                                  child: Opacity(
+                                    opacity: 1.0 - (_searchAnimation.value / 0.7).clamp(0.0, 1.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const SizedBox(width: 44),
+                                        Expanded(
+                                          child: Center(
+                                            child: Text(
+                                              'GetDealsFromUSA',
+                                              style: GoogleFonts.inter(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.3,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 44),
+                                      ],
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
-
-                              // Notification Button
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
+                            
+                            // Notification Button - Fades out
+                            if (_searchAnimation.value < 0.7)
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: IgnorePointer(
+                                  ignoring: _searchAnimation.value > 0,
+                                  child: Opacity(
+                                    opacity: 1.0 - (_searchAnimation.value / 0.7).clamp(0.0, 1.0),
+                                    child: Container(
+                                      width: 44,
+                                      height: 44,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.1),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: const Icon(
+                                        Icons.notifications_outlined,
+                                        size: 22,
+                                      ),
                                     ),
-                                  ],
-                                ),
-                                child: const Icon(
-                                  Icons.notifications_outlined,
-                                  size: 22,
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
