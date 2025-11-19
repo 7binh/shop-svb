@@ -534,6 +534,22 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             ),
           ),
 
+          // White background fill below popup when open
+          AnimatedBuilder(
+            animation: _popupAnimation,
+            builder: (context, child) {
+              if (!_showSizeColorPopup && _popupAnimation.value == 0) {
+                return const SizedBox.shrink();
+              }
+              return Positioned.fill(
+                bottom: 0,
+                child: Container(
+                  color: Colors.white,
+                ),
+              );
+            },
+          ),
+
           // Blur overlay when popup is open
           AnimatedBuilder(
             animation: _popupAnimation,
@@ -553,22 +569,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                       color: Colors.black.withOpacity(0.3 * _popupAnimation.value),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-
-          // White background fill below popup
-          AnimatedBuilder(
-            animation: _popupAnimation,
-            builder: (context, child) {
-              if (!_showSizeColorPopup && _popupAnimation.value == 0) {
-                return const SizedBox.shrink();
-              }
-              return Positioned.fill(
-                bottom: 0,
-                child: Container(
-                  color: Colors.white,
                 ),
               );
             },
@@ -605,18 +605,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             ),
                           ),
                           Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(24.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             // Header
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -792,11 +792,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                 ),
                               ),
                             ),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
-                          ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ),
                         ],
                       ),
                     ),
