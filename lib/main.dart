@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       quantity: 2,
     ),
   ];
-  
+
   String? _swipedItemId; // Track which item is swiped open
 
   @override
@@ -151,51 +151,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> _confirmDeleteItem(CartItem item) async {
-    final shouldDelete = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Remove Item',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
-        ),
-        content: Text(
-          'Are you sure you want to remove "${item.title}" from your cart?',
-          style: GoogleFonts.inter(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.inter(
-                color: Colors.grey,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text(
-              'Remove',
-              style: GoogleFonts.inter(
-                color: Colors.red,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (shouldDelete == true) {
-      setState(() {
-        _cartItems.removeWhere((cartItem) => cartItem.id == item.id);
-        _swipedItemId = null; // Reset swipe state
-      });
-    }
+  void _deleteItem(CartItem item) {
+    setState(() {
+      _cartItems.removeWhere((cartItem) => cartItem.id == item.id);
+      _swipedItemId = null; // Reset swipe state
+    });
   }
 
   @override
@@ -769,22 +729,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     const SizedBox(height: 12),
                                             itemBuilder: (context, index) {
                                               final item = _cartItems[index];
-                                              final isOpen = _swipedItemId == item.id;
-                                              
+                                              final isOpen =
+                                                  _swipedItemId == item.id;
+
                                               return GestureDetector(
-                                                onHorizontalDragUpdate: (details) {
-                                                  if (details.delta.dx < -5) {
-                                                    // Swiping left
-                                                    setState(() {
-                                                      _swipedItemId = item.id;
-                                                    });
-                                                  } else if (details.delta.dx > 5 && isOpen) {
-                                                    // Swiping right when open
-                                                    setState(() {
-                                                      _swipedItemId = null;
-                                                    });
-                                                  }
-                                                },
+                                                onHorizontalDragUpdate:
+                                                    (details) {
+                                                      if (details.delta.dx <
+                                                          -5) {
+                                                        // Swiping left
+                                                        setState(() {
+                                                          _swipedItemId =
+                                                              item.id;
+                                                        });
+                                                      } else if (details
+                                                                  .delta
+                                                                  .dx >
+                                                              5 &&
+                                                          isOpen) {
+                                                        // Swiping right when open
+                                                        setState(() {
+                                                          _swipedItemId = null;
+                                                        });
+                                                      }
+                                                    },
                                                 onTap: () {
                                                   // Close when tap on item
                                                   if (isOpen) {
@@ -798,34 +766,51 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     // Background delete button
                                                     Positioned.fill(
                                                       child: Container(
-                                                        alignment: Alignment.centerRight,
-                                                        padding: const EdgeInsets.only(right: 20),
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        padding:
+                                                            const EdgeInsets.only(
+                                                              right: 20,
+                                                            ),
                                                         decoration: BoxDecoration(
                                                           color: Colors.red,
-                                                          borderRadius: BorderRadius.circular(16),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                16,
+                                                              ),
                                                         ),
                                                         child: GestureDetector(
                                                           onTap: () {
-                                                            _confirmDeleteItem(item);
+                                                            _deleteItem(item);
                                                           },
                                                           child: Container(
                                                             width: 80,
-                                                            color: Colors.transparent,
+                                                            color: Colors
+                                                                .transparent,
                                                             child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
                                                               children: [
                                                                 const Icon(
                                                                   Icons.delete,
-                                                                  color: Colors.white,
+                                                                  color: Colors
+                                                                      .white,
                                                                   size: 28,
                                                                 ),
-                                                                const SizedBox(height: 4),
+                                                                const SizedBox(
+                                                                  height: 4,
+                                                                ),
                                                                 Text(
                                                                   'Delete',
                                                                   style: GoogleFonts.inter(
-                                                                    color: Colors.white,
-                                                                    fontSize: 12,
-                                                                    fontWeight: FontWeight.w600,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
                                                                   ),
                                                                 ),
                                                               ],
@@ -836,14 +821,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     ),
                                                     // Sliding item
                                                     AnimatedContainer(
-                                                      duration: const Duration(milliseconds: 250),
-                                                      curve: Curves.easeOut,
-                                                      transform: Matrix4.translationValues(
-                                                        isOpen ? -100 : 0,
-                                                        0,
-                                                        0,
+                                                      duration: const Duration(
+                                                        milliseconds: 250,
                                                       ),
-                                                      child: _buildCartItem(item),
+                                                      curve: Curves.easeOut,
+                                                      transform:
+                                                          Matrix4.translationValues(
+                                                            isOpen ? -100 : 0,
+                                                            0,
+                                                            0,
+                                                          ),
+                                                      child: _buildCartItem(
+                                                        item,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
