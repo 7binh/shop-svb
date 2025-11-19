@@ -115,9 +115,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
+    return Stack(
+      children: [
+        Scaffold(
+          extendBodyBehindAppBar: true,
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
         child: Stack(
           children: [
@@ -334,27 +336,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ],
             ),
 
-            // Blur Overlay when searching - Covers everything except search bar
+            // Tap area to close search
             if (_isSearching)
               Positioned.fill(
                 child: GestureDetector(
                   onTap: _toggleSearch,
-                  child: AnimatedBuilder(
-                    animation: _searchAnimation,
-                    builder: (context, child) {
-                      return BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 8.0 * _searchAnimation.value,
-                          sigmaY: 8.0 * _searchAnimation.value,
-                        ),
-                        child: Container(
-                          color: Colors.black.withOpacity(
-                            0.5 * _searchAnimation.value,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  child: Container(color: Colors.transparent),
                 ),
               ),
 
@@ -562,7 +549,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
 
-            // Blur overlay when cart is open - BEFORE cart so cart is on top
+            // Tap area to close cart
             AnimatedBuilder(
               animation: _cartAnimationController,
               builder: (context, child) {
@@ -574,17 +561,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ignoring: !_isCartOpen,
                     child: GestureDetector(
                       onTap: _toggleCart,
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 5.0 * _cartAnimationController.value,
-                          sigmaY: 5.0 * _cartAnimationController.value,
-                        ),
-                        child: Container(
-                          color: Colors.black.withOpacity(
-                            0.3 * _cartAnimationController.value,
-                          ),
-                        ),
-                      ),
+                      child: Container(color: Colors.transparent),
                     ),
                   ),
                 );
@@ -598,182 +575,184 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 if (_cartAnimationController.value == 0) {
                   return const SizedBox.shrink();
                 }
-                return
-              Positioned(
-                top: 0,
-                right: 0,
-                child: SafeArea(
-                  child: Builder(
-                    builder: (context) {
-                      final screenWidth = MediaQuery.of(context).size.width;
-                      final screenHeight = MediaQuery.of(context).size.height;
+                return Positioned(
+                  top: 0,
+                  right: 0,
+                  child: SafeArea(
+                    child: Builder(
+                      builder: (context) {
+                        final screenWidth = MediaQuery.of(context).size.width;
+                        final screenHeight = MediaQuery.of(context).size.height;
 
-                      // Phase 1: Width animation from right to left
-                      final cartWidth =
-                          44 +
-                          (screenWidth - 44 - 32) * _cartWidthAnimation.value;
+                        // Phase 1: Width animation from right to left
+                        final cartWidth =
+                            44 +
+                            (screenWidth - 44 - 32) * _cartWidthAnimation.value;
 
-                      // Phase 2: Height animation from top to bottom
-                      final cartHeight =
-                          44 +
-                          (screenHeight * 0.6) * _cartHeightAnimation.value;
+                        // Phase 2: Height animation from top to bottom
+                        final cartHeight =
+                            44 +
+                            (screenHeight * 0.6) * _cartHeightAnimation.value;
 
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 16, right: 16),
-                        child: Container(
-                          width: cartWidth,
-                          height: cartHeight,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(22),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: _cartHeightAnimation.value > 0.3
-                              ? Column(
-                                  children: [
-                                    // Header
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Shopping Cart',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: _toggleCart,
-                                            child: Container(
-                                              width: 32,
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.shade100,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: const Icon(
-                                                Icons.close,
-                                                size: 18,
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 16, right: 16),
+                          child: Container(
+                            width: cartWidth,
+                            height: cartHeight,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(22),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: _cartHeightAnimation.value > 0.3
+                                ? Column(
+                                    children: [
+                                      // Header
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Shopping Cart',
+                                              style: GoogleFonts.inter(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            GestureDetector(
+                                              onTap: _toggleCart,
+                                              child: Container(
+                                                width: 32,
+                                                height: 32,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    const Divider(height: 1),
 
-                                    // Cart Items
-                                    Expanded(
-                                      child: Opacity(
+                                      // Cart Items
+                                      Expanded(
+                                        child: Opacity(
+                                          opacity:
+                                              (_cartHeightAnimation.value -
+                                                  0.3) /
+                                              0.7,
+                                          child: ListView(
+                                            padding: const EdgeInsets.all(16),
+                                            children: [
+                                              _buildCartItem(
+                                                'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
+                                                'Tweed Waistcoat',
+                                                '\$29.00',
+                                                1,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _buildCartItem(
+                                                'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
+                                                'Denim Jacket',
+                                                '\$34.90',
+                                                2,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      // Checkout Button
+                                      Opacity(
                                         opacity:
                                             (_cartHeightAnimation.value - 0.3) /
                                             0.7,
-                                        child: ListView(
+                                        child: Container(
                                           padding: const EdgeInsets.all(16),
-                                          children: [
-                                            _buildCartItem(
-                                              'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
-                                              'Tweed Waistcoat',
-                                              '\$29.00',
-                                              1,
-                                            ),
-                                            const SizedBox(height: 12),
-                                            _buildCartItem(
-                                              'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
-                                              'Denim Jacket',
-                                              '\$34.90',
-                                              2,
-                                            ),
-                                          ],
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade50,
+                                            borderRadius:
+                                                const BorderRadius.vertical(
+                                                  bottom: Radius.circular(22),
+                                                ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    'Total',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '\$98.80',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 12),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Checkout',
+                                                    style: GoogleFonts.inter(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                    ],
+                                  )
+                                : Center(
+                                    child: Icon(
+                                      Icons.shopping_bag_outlined,
+                                      size: 22,
+                                      color: Colors.black,
                                     ),
-
-                                    // Checkout Button
-                                    Opacity(
-                                      opacity:
-                                          (_cartHeightAnimation.value - 0.3) /
-                                          0.7,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(16),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade50,
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                bottom: Radius.circular(22),
-                                              ),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'Total',
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '\$98.80',
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 12),
-                                            Container(
-                                              width: double.infinity,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  'Checkout',
-                                                  style: GoogleFonts.inter(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Center(
-                                  child: Icon(
-                                    Icons.shopping_bag_outlined,
-                                    size: 22,
-                                    color: Colors.black,
                                   ),
-                                ),
-                        ),
-                      );
-                    },
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              );
+                );
               },
             ),
           ],
@@ -805,6 +784,56 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ),
       ),
+    ),
+        
+        // Global blur overlay for search - covers entire screen including bottom nav
+        if (_isSearching)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: AnimatedBuilder(
+                animation: _searchAnimation,
+                builder: (context, child) {
+                  return BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 8.0 * _searchAnimation.value,
+                      sigmaY: 8.0 * _searchAnimation.value,
+                    ),
+                    child: Container(
+                      color: Colors.black.withOpacity(
+                        0.5 * _searchAnimation.value,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        
+        // Global blur overlay for cart - covers entire screen including bottom nav
+        AnimatedBuilder(
+          animation: _cartAnimationController,
+          builder: (context, child) {
+            if (_cartAnimationController.value == 0) {
+              return const SizedBox.shrink();
+            }
+            return Positioned.fill(
+              child: IgnorePointer(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: 5.0 * _cartAnimationController.value,
+                    sigmaY: 5.0 * _cartAnimationController.value,
+                  ),
+                  child: Container(
+                    color: Colors.black.withOpacity(
+                      0.3 * _cartAnimationController.value,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
