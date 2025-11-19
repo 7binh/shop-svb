@@ -1006,10 +1006,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         color: isSelected ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: isSelected ? Colors.black : Colors.grey.shade300,
-          width: 1.5,
-        ),
       ),
       child: Center(
         child: Text(
