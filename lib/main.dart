@@ -708,13 +708,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 width: 36,
                                                 height: 36,
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFFF0F0F0),
+                                                  color: const Color(
+                                                    0xFFF0F0F0,
+                                                  ),
                                                   shape: BoxShape.circle,
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black.withOpacity(0.06),
+                                                      color: Colors.black
+                                                          .withOpacity(0.06),
                                                       blurRadius: 6,
-                                                      offset: const Offset(0, 2),
+                                                      offset: const Offset(
+                                                        0,
+                                                        2,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -791,7 +797,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                             color: Colors.red,
                                                             borderRadius:
                                                                 BorderRadius.circular(
-                                                                  16,
+                                                                  20,
                                                                 ),
                                                           ),
                                                           child: GestureDetector(
@@ -894,7 +900,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       fontSize: 17,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: Colors.grey.shade700,
+                                                      color:
+                                                          Colors.grey.shade700,
                                                     ),
                                                   ),
                                                   Text(
@@ -917,9 +924,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       BorderRadius.circular(28),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black.withOpacity(0.3),
+                                                      color: Colors.black
+                                                          .withOpacity(0.3),
                                                       blurRadius: 12,
-                                                      offset: const Offset(0, 4),
+                                                      offset: const Offset(
+                                                        0,
+                                                        4,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -995,13 +1006,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         color: isSelected ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(
+          color: isSelected ? Colors.black : Colors.grey.shade300,
+          width: 1.5,
+        ),
       ),
       child: Center(
         child: Text(
@@ -1023,10 +1031,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         color: const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
