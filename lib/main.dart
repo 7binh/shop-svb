@@ -37,8 +37,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   bool _isSearching = false;
   bool _isCartOpen = false;
@@ -61,17 +60,17 @@ class _HomePageState extends State<HomePage>
       parent: _searchAnimationController,
       curve: Curves.easeInOut,
     );
-    
+
     _cartAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    
+
     _cartWidthAnimation = CurvedAnimation(
       parent: _cartAnimationController,
       curve: const Interval(0.0, 0.5, curve: Curves.easeInOut),
     );
-    
+
     _cartHeightAnimation = CurvedAnimation(
       parent: _cartAnimationController,
       curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
@@ -562,52 +561,63 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             ),
-            
+
             // Blur overlay when cart is open - BEFORE cart so cart is on top
-            if (_isCartOpen || _cartAnimationController.isAnimating)
-              Positioned.fill(
-                child: IgnorePointer(
-                  ignoring: !_isCartOpen,
-                  child: GestureDetector(
-                    onTap: _toggleCart,
-                    child: AnimatedBuilder(
-                      animation: _cartAnimationController,
-                      builder: (context, child) {
-                        return BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaX: 5.0 * _cartAnimationController.value,
-                            sigmaY: 5.0 * _cartAnimationController.value,
+            AnimatedBuilder(
+              animation: _cartAnimationController,
+              builder: (context, child) {
+                if (_cartAnimationController.value == 0) {
+                  return const SizedBox.shrink();
+                }
+                return Positioned.fill(
+                  child: IgnorePointer(
+                    ignoring: !_isCartOpen,
+                    child: GestureDetector(
+                      onTap: _toggleCart,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 5.0 * _cartAnimationController.value,
+                          sigmaY: 5.0 * _cartAnimationController.value,
+                        ),
+                        child: Container(
+                          color: Colors.black.withOpacity(
+                            0.3 * _cartAnimationController.value,
                           ),
-                          child: Container(
-                            color: Colors.black.withOpacity(
-                              0.3 * _cartAnimationController.value,
-                            ),
-                          ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
+            ),
 
             // Cart Popup Animation - AFTER blur so it's on top and clear
-            if (_isCartOpen || _cartAnimationController.isAnimating)
+            AnimatedBuilder(
+              animation: _cartAnimationController,
+              builder: (context, child) {
+                if (_cartAnimationController.value == 0) {
+                  return const SizedBox.shrink();
+                }
+                return
               Positioned(
                 top: 0,
                 right: 0,
                 child: SafeArea(
-                  child: AnimatedBuilder(
-                    animation: _cartAnimationController,
-                    builder: (context, child) {
+                  child: Builder(
+                    builder: (context) {
                       final screenWidth = MediaQuery.of(context).size.width;
                       final screenHeight = MediaQuery.of(context).size.height;
-                      
+
                       // Phase 1: Width animation from right to left
-                      final cartWidth = 44 + (screenWidth - 44 - 32) * _cartWidthAnimation.value;
-                      
+                      final cartWidth =
+                          44 +
+                          (screenWidth - 44 - 32) * _cartWidthAnimation.value;
+
                       // Phase 2: Height animation from top to bottom
-                      final cartHeight = 44 + (screenHeight * 0.6) * _cartHeightAnimation.value;
-                      
+                      final cartHeight =
+                          44 +
+                          (screenHeight * 0.6) * _cartHeightAnimation.value;
+
                       return Padding(
                         padding: const EdgeInsets.only(top: 16, right: 16),
                         child: Container(
@@ -631,7 +641,8 @@ class _HomePageState extends State<HomePage>
                                     Padding(
                                       padding: const EdgeInsets.all(16.0),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             'Shopping Cart',
@@ -659,11 +670,13 @@ class _HomePageState extends State<HomePage>
                                       ),
                                     ),
                                     const Divider(height: 1),
-                                    
+
                                     // Cart Items
                                     Expanded(
                                       child: Opacity(
-                                        opacity: (_cartHeightAnimation.value - 0.3) / 0.7,
+                                        opacity:
+                                            (_cartHeightAnimation.value - 0.3) /
+                                            0.7,
                                         child: ListView(
                                           padding: const EdgeInsets.all(16),
                                           children: [
@@ -684,22 +697,27 @@ class _HomePageState extends State<HomePage>
                                         ),
                                       ),
                                     ),
-                                    
+
                                     // Checkout Button
                                     Opacity(
-                                      opacity: (_cartHeightAnimation.value - 0.3) / 0.7,
+                                      opacity:
+                                          (_cartHeightAnimation.value - 0.3) /
+                                          0.7,
                                       child: Container(
                                         padding: const EdgeInsets.all(16),
                                         decoration: BoxDecoration(
                                           color: Colors.grey.shade50,
-                                          borderRadius: const BorderRadius.vertical(
-                                            bottom: Radius.circular(22),
-                                          ),
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                bottom: Radius.circular(22),
+                                              ),
                                         ),
                                         child: Column(
                                           children: [
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
                                                   'Total',
@@ -723,7 +741,8 @@ class _HomePageState extends State<HomePage>
                                               height: 50,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
-                                                borderRadius: BorderRadius.circular(25),
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
                                               ),
                                               child: Center(
                                                 child: Text(
@@ -754,7 +773,9 @@ class _HomePageState extends State<HomePage>
                     },
                   ),
                 ),
-              ),
+              );
+              },
+            ),
           ],
         ),
       ),
@@ -809,7 +830,12 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _buildCartItem(String imageUrl, String title, String price, int quantity) {
+  Widget _buildCartItem(
+    String imageUrl,
+    String title,
+    String price,
+    int quantity,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -826,13 +852,12 @@ class _HomePageState extends State<HomePage>
               width: 70,
               height: 70,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: Colors.grey.shade200,
-              ),
+              placeholder: (context, url) =>
+                  Container(color: Colors.grey.shade200),
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // Product Info
           Expanded(
             child: Column(
@@ -856,7 +881,7 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Quantity Controls
                 Row(
                   children: [
@@ -897,7 +922,7 @@ class _HomePageState extends State<HomePage>
               ],
             ),
           ),
-          
+
           // Delete Button
           IconButton(
             icon: const Icon(Icons.delete_outline, size: 20),
