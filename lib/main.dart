@@ -352,11 +352,15 @@ class _HomePageState extends State<HomePage>
                     child: AnimatedBuilder(
                       animation: _searchAnimation,
                       builder: (context, child) {
-                        final screenWidth = MediaQuery.of(context).size.width - 32;
-                        final searchWidth = 44 + (screenWidth - 44) * _searchAnimation.value;
-                        
-                        return Stack(
-                          children: [
+                        final screenWidth =
+                            MediaQuery.of(context).size.width - 32;
+                        final searchWidth =
+                            44 + (screenWidth - 44) * _searchAnimation.value;
+
+                        return SizedBox(
+                          height: 44,
+                          child: Stack(
+                            children: [
                             // Search Button/Bar - Animates from left
                             Positioned(
                               left: 0,
@@ -385,7 +389,9 @@ class _HomePageState extends State<HomePage>
                                         const SizedBox(width: 8),
                                         Expanded(
                                           child: Opacity(
-                                            opacity: (_searchAnimation.value - 0.3) / 0.7,
+                                            opacity:
+                                                (_searchAnimation.value - 0.3) /
+                                                0.7,
                                             child: TextField(
                                               controller: _searchController,
                                               focusNode: _searchFocusNode,
@@ -407,9 +413,14 @@ class _HomePageState extends State<HomePage>
                                           ),
                                         ),
                                         Opacity(
-                                          opacity: (_searchAnimation.value - 0.3) / 0.7,
+                                          opacity:
+                                              (_searchAnimation.value - 0.3) /
+                                              0.7,
                                           child: IconButton(
-                                            icon: const Icon(Icons.close, size: 20),
+                                            icon: const Icon(
+                                              Icons.close,
+                                              size: 20,
+                                            ),
                                             onPressed: _toggleSearch,
                                             padding: EdgeInsets.zero,
                                             constraints: const BoxConstraints(
@@ -425,7 +436,7 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                             ),
-                            
+
                             // Shop Name - Fades out and moves
                             if (_searchAnimation.value < 0.7)
                               Positioned(
@@ -435,9 +446,15 @@ class _HomePageState extends State<HomePage>
                                 child: IgnorePointer(
                                   ignoring: _searchAnimation.value > 0,
                                   child: Opacity(
-                                    opacity: 1.0 - (_searchAnimation.value / 0.7).clamp(0.0, 1.0),
+                                    opacity:
+                                        1.0 -
+                                        (_searchAnimation.value / 0.7).clamp(
+                                          0.0,
+                                          1.0,
+                                        ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         const SizedBox(width: 44),
                                         Expanded(
@@ -460,7 +477,7 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
                               ),
-                            
+
                             // Notification Button - Fades out
                             if (_searchAnimation.value < 0.7)
                               Positioned(
@@ -469,7 +486,12 @@ class _HomePageState extends State<HomePage>
                                 child: IgnorePointer(
                                   ignoring: _searchAnimation.value > 0,
                                   child: Opacity(
-                                    opacity: 1.0 - (_searchAnimation.value / 0.7).clamp(0.0, 1.0),
+                                    opacity:
+                                        1.0 -
+                                        (_searchAnimation.value / 0.7).clamp(
+                                          0.0,
+                                          1.0,
+                                        ),
                                     child: Container(
                                       width: 44,
                                       height: 44,
@@ -478,7 +500,9 @@ class _HomePageState extends State<HomePage>
                                         shape: BoxShape.circle,
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(0.1),
+                                            color: Colors.black.withOpacity(
+                                              0.1,
+                                            ),
                                             blurRadius: 10,
                                             offset: const Offset(0, 2),
                                           ),
@@ -492,7 +516,8 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
                               ),
-                          ],
+                            ],
+                          ),
                         );
                       },
                     ),
