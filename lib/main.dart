@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,6 +39,34 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final ScrollController _scrollController = ScrollController();
+  bool _isScrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    // Hero banner height is 340, nav starts changing at around 280
+    if (_scrollController.offset > 280 && !_isScrolled) {
+      setState(() {
+        _isScrolled = true;
+      });
+    } else if (_scrollController.offset <= 280 && _isScrolled) {
+      setState(() {
+        _isScrolled = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +74,11 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: Stack(
+          child: Stack(
           children: [
             // Main Content
             CustomScrollView(
+              controller: _scrollController,
               slivers: [
                 // Spacer for fixed header
                 const SliverToBoxAdapter(
@@ -270,71 +300,126 @@ class _HomePageState extends State<HomePage> {
             top: 0,
             left: 0,
             right: 0,
-            child: SafeArea(
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.3),
-                      Colors.transparent,
-                    ],
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: _isScrolled ? 10 : 0,
+                    sigmaY: _isScrolled ? 10 : 0,
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(Icons.search, size: 24),
-                    ),
-                    Text(
-                      'YUMI Shop',
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.5,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.3),
-                            offset: const Offset(0, 2),
-                            blurRadius: 8,
-                          ),
-                        ],
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: _isScrolled 
+                          ? Colors.white.withOpacity(0.7)
+                          : Colors.transparent,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: _isScrolled 
+                              ? Colors.black.withOpacity(0.05)
+                              : Colors.transparent,
+                          width: 1,
+                        ),
                       ),
                     ),
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                    child: SafeArea(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          gradient: _isScrolled
+                              ? null
+                              : LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.3),
+                                    Colors.transparent,
+                                  ],
+                                ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: _isScrolled
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: _isScrolled
+                                      ? Colors.black.withOpacity(0.06)
+                                      : Colors.transparent,
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(_isScrolled ? 0.05 : 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.search,
+                                size: 24,
+                                color: _isScrolled ? Colors.black : Colors.black87,
+                              ),
+                            ),
+                            AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 200),
+                              style: GoogleFonts.inter(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                                color: _isScrolled ? Colors.black : Colors.white,
+                                shadows: _isScrolled
+                                    ? []
+                                    : [
+                                        Shadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          offset: const Offset(0, 2),
+                                          blurRadius: 8,
+                                        ),
+                                      ],
+                              ),
+                              child: const Text('YUMI Shop'),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: _isScrolled
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: _isScrolled
+                                      ? Colors.black.withOpacity(0.06)
+                                      : Colors.transparent,
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(_isScrolled ? 0.05 : 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.notifications_outlined,
+                                size: 24,
+                                color: _isScrolled ? Colors.black : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: const Icon(Icons.notifications_outlined, size: 24),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
