@@ -30,6 +30,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   bool _showSizeColorPopup = false;
   final PageController _pageController = PageController();
   int _currentImageIndex = 0;
+  double _popupDragOffset = 0;
 
   late AnimationController _popupAnimationController;
   late Animation<double> _popupAnimation;
@@ -70,11 +71,36 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   }
 
   void _closeSizeColorPopup() {
+    setState(() {
+      _popupDragOffset = 0;
+    });
     _popupAnimationController.reverse().then((_) {
       setState(() {
         _showSizeColorPopup = false;
       });
     });
+  }
+
+  void _handlePopupDrag(DragUpdateDetails details) {
+    if (details.primaryDelta! > 0) {
+      // Dragging down
+      setState(() {
+        _popupDragOffset = _popupDragOffset + details.primaryDelta!;
+        if (_popupDragOffset < 0) _popupDragOffset = 0;
+      });
+    }
+  }
+
+  void _handlePopupDragEnd(DragEndDetails details) {
+    if (_popupDragOffset > 100) {
+      // Dragged enough to close
+      _closeSizeColorPopup();
+    } else {
+      // Snap back
+      setState(() {
+        _popupDragOffset = 0;
+      });
+    }
   }
 
   void _confirmAddToCart() {
@@ -532,6 +558,22 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             },
           ),
 
+          // White background fill below popup
+          AnimatedBuilder(
+            animation: _popupAnimation,
+            builder: (context, child) {
+              if (!_showSizeColorPopup && _popupAnimation.value == 0) {
+                return const SizedBox.shrink();
+              }
+              return Positioned.fill(
+                bottom: 0,
+                child: Container(
+                  color: Colors.white,
+                ),
+              );
+            },
+          ),
+
           // Size & Color Selection Popup
           AnimatedBuilder(
             animation: _popupAnimation,
@@ -543,22 +585,38 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: Transform.translate(
-                  offset: Offset(0, (1 - _popupAnimation.value) * 500),
-                  child: SafeArea(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(30),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                child: GestureDetector(
+                  onVerticalDragUpdate: _handlePopupDrag,
+                  onVerticalDragEnd: _handlePopupDragEnd,
+                  child: Transform.translate(
+                    offset: Offset(0, (1 - _popupAnimation.value) * 500 + _popupDragOffset),
+                    child: SafeArea(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Drag handle indicator
+                          Container(
+                            width: 40,
+                            height: 4,
+                            margin: const EdgeInsets.only(top: 12, bottom: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                             // Header
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -734,9 +792,12 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
