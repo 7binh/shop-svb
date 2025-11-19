@@ -469,49 +469,36 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
           // Fixed Add to Cart Button
           Positioned(
-            left: 0,
-            right: 0,
+            left: 16,
+            right: 16,
             bottom: 0,
             child: SafeArea(
               child: Container(
-                padding: const EdgeInsets.all(16),
+                width: double.infinity,
+                height: 60,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, -5),
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: _openSizeColorPopup,
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: _openSizeColorPopup,
-                      borderRadius: BorderRadius.circular(30),
-                      child: Center(
-                        child: Text(
-                          'Add to Cart',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
+                    child: Center(
+                      child: Text(
+                        'Add to Cart',
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
