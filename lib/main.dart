@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,34 +38,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  final ScrollController _scrollController = ScrollController();
-  bool _isScrolled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    // Hero banner height is 340, nav starts changing at around 280
-    if (_scrollController.offset > 280 && !_isScrolled) {
-      setState(() {
-        _isScrolled = true;
-      });
-    } else if (_scrollController.offset <= 280 && _isScrolled) {
-      setState(() {
-        _isScrolled = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,34 +45,29 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-          child: Stack(
+        child: Stack(
           children: [
             // Main Content
             CustomScrollView(
-              controller: _scrollController,
               slivers: [
                 // Spacer for fixed header
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 0),
-                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 0)),
 
                 // Hero Banner - starts from top
                 SliverToBoxAdapter(
                   child: Container(
                     height: 340,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFE8E8E8),
-                    ),
+                    decoration: const BoxDecoration(color: Color(0xFFE8E8E8)),
                     child: Stack(
                       children: [
                         // Background Image
                         Positioned.fill(
                           child: CachedNetworkImage(
-                            imageUrl: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
+                            imageUrl:
+                                'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: const Color(0xFFE8E8E8),
-                            ),
+                            placeholder: (context, url) =>
+                                Container(color: const Color(0xFFE8E8E8)),
                           ),
                         ),
                         // Gradient Overlay
@@ -188,245 +154,185 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-              // Popular Categories
-              SliverToBoxAdapter(
-                child: Padding(
+                // Popular Categories
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Popular categories',
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Categories List
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 50,
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildCategoryChip('Women', true),
+                        _buildCategoryChip('Men', false),
+                        _buildCategoryChip('Kids', false),
+                        _buildCategoryChip('Beauty', false),
+                        _buildCategoryChip('Accessories', false),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // New Arrival
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'New arrival',
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Products Grid
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverGrid(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.65,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                    delegate: SliverChildListDelegate([
+                      _buildProductCard(
+                        'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400',
+                        'Tweed Waistcoat',
+                        '\$29.00',
+                        true,
+                        true,
+                      ),
+                      _buildProductCard(
+                        'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400',
+                        'Denim Jacket',
+                        '\$34.90',
+                        false,
+                        false,
+                      ),
+                      _buildProductCard(
+                        'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400',
+                        'Casual Blazer',
+                        '\$49.90',
+                        false,
+                        false,
+                      ),
+                      _buildProductCard(
+                        'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400',
+                        'Leather Jacket',
+                        '\$89.90',
+                        true,
+                        false,
+                      ),
+                    ]),
+                  ),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 100)),
+              ],
+            ),
+
+            // Fixed Header on top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Container(
                   padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withOpacity(0.95),
+                        Colors.white.withOpacity(0.0),
+                      ],
+                    ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Popular categories',
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Icon(Icons.arrow_forward, size: 20),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Categories List
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 50,
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildCategoryChip('Women', true),
-                      _buildCategoryChip('Men', false),
-                      _buildCategoryChip('Kids', false),
-                      _buildCategoryChip('Beauty', false),
-                      _buildCategoryChip('Accessories', false),
-                    ],
-                  ),
-                ),
-              ),
-
-              // New Arrival
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'New arrival',
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Icon(Icons.arrow_forward, size: 20),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Products Grid
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.65,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  delegate: SliverChildListDelegate([
-                    _buildProductCard(
-                      'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400',
-                      'Tweed Waistcoat',
-                      '\$29.00',
-                      true,
-                      true,
-                    ),
-                    _buildProductCard(
-                      'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400',
-                      'Denim Jacket',
-                      '\$34.90',
-                      false,
-                      false,
-                    ),
-                    _buildProductCard(
-                      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400',
-                      'Casual Blazer',
-                      '\$49.90',
-                      false,
-                      false,
-                    ),
-                    _buildProductCard(
-                      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400',
-                      'Leather Jacket',
-                      '\$89.90',
-                      true,
-                      false,
-                    ),
-                  ]),
-                ),
-              ),
-
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 100),
-              ),
-            ],
-          ),
-
-          // Fixed Header on top
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: _isScrolled ? 10 : 0,
-                    sigmaY: _isScrolled ? 10 : 0,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: _isScrolled 
-                          ? Colors.white.withOpacity(0.7)
-                          : Colors.transparent,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: _isScrolled 
-                              ? Colors.black.withOpacity(0.05)
-                              : Colors.transparent,
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: SafeArea(
-                      child: Container(
-                        padding: const EdgeInsets.all(16.0),
+                      Container(
+                        width: 44,
+                        height: 44,
                         decoration: BoxDecoration(
-                          gradient: _isScrolled
-                              ? null
-                              : LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.black.withOpacity(0.3),
-                                    Colors.transparent,
-                                  ],
-                                ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: _isScrolled
-                                    ? Colors.white
-                                    : Colors.white.withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: _isScrolled
-                                      ? Colors.black.withOpacity(0.06)
-                                      : Colors.transparent,
-                                  width: 1,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(_isScrolled ? 0.05 : 0.1),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Icon(
-                                Icons.search,
-                                size: 24,
-                                color: _isScrolled ? Colors.black : Colors.black87,
-                              ),
-                            ),
-                            AnimatedDefaultTextStyle(
-                              duration: const Duration(milliseconds: 200),
-                              style: GoogleFonts.inter(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5,
-                                color: _isScrolled ? Colors.black : Colors.white,
-                                shadows: _isScrolled
-                                    ? []
-                                    : [
-                                        Shadow(
-                                          color: Colors.black.withOpacity(0.3),
-                                          offset: const Offset(0, 2),
-                                          blurRadius: 8,
-                                        ),
-                                      ],
-                              ),
-                              child: const Text('YUMI Shop'),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: _isScrolled
-                                    ? Colors.white
-                                    : Colors.white.withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: _isScrolled
-                                      ? Colors.black.withOpacity(0.06)
-                                      : Colors.transparent,
-                                  width: 1,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(_isScrolled ? 0.05 : 0.1),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Icon(
-                                Icons.notifications_outlined,
-                                size: 24,
-                                color: _isScrolled ? Colors.black : Colors.black87,
-                              ),
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
+                        child: const Icon(Icons.search, size: 22),
                       ),
-                    ),
+                      Text(
+                        'YUMI Shop',
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.notifications_outlined,
+                          size: 22,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -502,9 +408,8 @@ class _HomePageState extends State<HomePage> {
                     imageUrl: imageUrl,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: const Color(0xFFE8E8E8),
-                    ),
+                    placeholder: (context, url) =>
+                        Container(color: const Color(0xFFE8E8E8)),
                   ),
                 ),
                 if (isLimited)
