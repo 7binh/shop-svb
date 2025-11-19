@@ -36,8 +36,53 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  bool _isSearchActive = false;
+  late AnimationController _searchAnimationController;
+  late Animation<double> _searchAnimation;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _searchAnimation = CurvedAnimation(
+      parent: _searchAnimationController,
+      curve: Curves.easeInOut,
+    );
+    _searchController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchAnimationController.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _isSearchActive = !_isSearchActive;
+      if (_isSearchActive) {
+        _searchAnimationController.forward();
+        Future.delayed(const Duration(milliseconds: 100), () {
+          _searchFocusNode.requestFocus();
+        });
+      } else {
+        _searchAnimationController.reverse();
+        _searchFocusNode.unfocus();
+        _searchController.clear();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,6 +305,22 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
 
+            // Overlay mờ khi search active
+            if (_isSearchActive)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: _toggleSearch,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 300),
+                    opacity: _isSearchActive ? 1.0 : 0.0,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      margin: const EdgeInsets.only(top: 100),
+                    ),
+                  ),
+                ),
+              ),
+
             // Fixed Header on top
             Positioned(
               top: 0,
@@ -279,54 +340,151 @@ class _HomePageState extends State<HomePage> {
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
+                    child: AnimatedBuilder(
+                      animation: _searchAnimation,
+                      builder: (context, child) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Search button/bar
+                            Expanded(
+                              flex: _isSearchActive ? 1 : 0,
+                              child: GestureDetector(
+                                onTap: _isSearchActive ? null : _toggleSearch,
+                                child: Container(
+                                  height: 44,
+                                  constraints: BoxConstraints(
+                                    minWidth: 44,
+                                    maxWidth: _isSearchActive
+                                        ? double.infinity
+                                        : 44,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                      _isSearchActive ? 24 : 22,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: _isSearchActive
+                                      ? Row(
+                                          children: [
+                                            const SizedBox(width: 16),
+                                            const Icon(
+                                              Icons.search,
+                                              size: 22,
+                                              color: Colors.grey,
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: TextField(
+                                                controller: _searchController,
+                                                focusNode: _searchFocusNode,
+                                                style: GoogleFonts.inter(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Search products...',
+                                                  hintStyle: GoogleFonts.inter(
+                                                    color: Colors.grey,
+                                                    fontSize: 16,
+                                                  ),
+                                                  border: InputBorder.none,
+                                                  isDense: true,
+                                                  contentPadding:
+                                                      EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                            if (_searchController
+                                                .text.isNotEmpty)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  _searchController.clear();
+                                                  setState(() {});
+                                                },
+                                                child: const Icon(
+                                                  Icons.clear,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            const SizedBox(width: 12),
+                                            GestureDetector(
+                                              onTap: _toggleSearch,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                          ],
+                                        )
+                                      : const Center(
+                                          child: Icon(
+                                            Icons.search,
+                                            size: 22,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ),
+
+                            // Logo và notification (ẩn khi search active)
+                            if (!_isSearchActive) ...[
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    'YUMI Shop',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.notifications_outlined,
+                                  size: 22,
+                                ),
                               ),
                             ],
-                          ),
-                          child: const Icon(Icons.search, size: 22),
-                        ),
-                        Text(
-                          'YUMI Shop',
-                          style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.notifications_outlined,
-                            size: 22,
-                          ),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -367,17 +525,20 @@ class _HomePageState extends State<HomePage> {
   Widget _buildCategoryChip(String label, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: isSelected ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(24),
       ),
-      child: Text(
-        label,
-        style: GoogleFonts.inter(
-          color: isSelected ? Colors.white : Colors.black,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
+      child: Center(
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            color: isSelected ? Colors.white : Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            height: 1.2,
+          ),
         ),
       ),
     );
