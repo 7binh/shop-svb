@@ -37,7 +37,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
@@ -322,140 +323,151 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Search Button with Animation
-                        AnimatedBuilder(
-                          animation: _searchAnimation,
-                          builder: (context, child) {
-                            return Container(
-                              width: 44 + (MediaQuery.of(context).size.width - 44 - 32) * _searchAnimation.value,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(22),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: _isSearching
-                                  ? Row(
-                                      children: [
-                                        const SizedBox(width: 12),
-                                        const Icon(Icons.search, size: 22),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _searchController,
-                                            focusNode: _searchFocusNode,
-                                            decoration: InputDecoration(
-                                              hintText: 'Search products...',
-                                              hintStyle: GoogleFonts.inter(
-                                                fontSize: 14,
-                                                color: Colors.grey,
-                                              ),
-                                              border: InputBorder.none,
-                                              isDense: true,
-                                            ),
-                                            style: GoogleFonts.inter(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                            ),
+                    child: _isSearching
+                        ? AnimatedBuilder(
+                            animation: _searchAnimation,
+                            builder: (context, child) {
+                              return Container(
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(22),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 12),
+                                    const Icon(Icons.search, size: 22),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _searchController,
+                                        focusNode: _searchFocusNode,
+                                        decoration: InputDecoration(
+                                          hintText: 'Search products...',
+                                          hintStyle: GoogleFonts.inter(
+                                            fontSize: 14,
+                                            color: Colors.grey,
                                           ),
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
                                         ),
-                                        IconButton(
-                                          icon: const Icon(Icons.close, size: 20),
-                                          onPressed: _toggleSearch,
-                                          padding: EdgeInsets.zero,
-                                          constraints: const BoxConstraints(),
-                                        ),
-                                        const SizedBox(width: 12),
-                                      ],
-                                    )
-                                  : GestureDetector(
-                                      onTap: _toggleSearch,
-                                      child: Container(
-                                        color: Colors.transparent,
-                                        child: const Center(
-                                          child: Icon(Icons.search, size: 22),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 14,
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ),
-                            );
-                          },
-                        ),
-                        
-                        // Shop Name - Hidden when searching
-                        if (!_isSearching)
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                'GetDealsFromUSA',
-                                style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.3,
-                                  color: Colors.black,
+                                    IconButton(
+                                      icon: const Icon(Icons.close, size: 20),
+                                      onPressed: _toggleSearch,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 40,
+                                        minHeight: 40,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                  ],
                                 ),
-                                overflow: TextOverflow.ellipsis,
+                              );
+                            },
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Search Button
+                              GestureDetector(
+                                onTap: _toggleSearch,
+                                child: Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Center(
+                                    child: Icon(Icons.search, size: 22),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        
-                        // Notification Button - Hidden when searching
-                        if (!_isSearching)
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 2),
+
+                              // Shop Name
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    'GetDealsFromUSA',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.3,
+                                      color: Colors.black,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.notifications_outlined,
-                              size: 22,
-                            ),
+                              ),
+
+                              // Notification Button
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.notifications_outlined,
+                                  size: 22,
+                                ),
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
                   ),
                 ),
               ),
             ),
-            
+
             // Blur Overlay when searching
             if (_isSearching)
               Positioned.fill(
                 top: 100,
                 child: GestureDetector(
                   onTap: _toggleSearch,
-                  child: AnimatedOpacity(
-                    opacity: _searchAnimation.value,
-                    duration: const Duration(milliseconds: 300),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                      child: BackdropFilter(
+                  child: AnimatedBuilder(
+                    animation: _searchAnimation,
+                    builder: (context, child) {
+                      return BackdropFilter(
                         filter: ImageFilter.blur(
-                          sigmaX: 5.0 * _searchAnimation.value,
-                          sigmaY: 5.0 * _searchAnimation.value,
+                          sigmaX: 8.0 * _searchAnimation.value,
+                          sigmaY: 8.0 * _searchAnimation.value,
                         ),
                         child: Container(
-                          color: Colors.transparent,
+                          color: Colors.black.withOpacity(0.5 * _searchAnimation.value),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
