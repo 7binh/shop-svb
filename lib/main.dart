@@ -120,675 +120,715 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         Scaffold(
           extendBodyBehindAppBar: true,
           body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: Stack(
-          children: [
-            // Main Content
-            CustomScrollView(
-              slivers: [
-                // Spacer for fixed header
-                const SliverToBoxAdapter(child: SizedBox(height: 0)),
+            value: SystemUiOverlayStyle.dark,
+            child: Stack(
+              children: [
+                // Main Content
+                CustomScrollView(
+                  slivers: [
+                    // Spacer for fixed header
+                    const SliverToBoxAdapter(child: SizedBox(height: 0)),
 
-                // Hero Banner - starts from top
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 340,
-                    decoration: const BoxDecoration(color: Color(0xFFE8E8E8)),
-                    child: Stack(
-                      children: [
-                        // Background Image
-                        Positioned.fill(
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                Container(color: const Color(0xFFE8E8E8)),
-                          ),
+                    // Hero Banner - starts from top
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: 340,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE8E8E8),
                         ),
-                        // Gradient Overlay
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  Colors.white.withOpacity(0.9),
-                                  Colors.transparent,
+                        child: Stack(
+                          children: [
+                            // Background Image
+                            Positioned.fill(
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    Container(color: const Color(0xFFE8E8E8)),
+                              ),
+                            ),
+                            // Gradient Overlay
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: [
+                                      Colors.white.withOpacity(0.9),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Bottom rounded corner overlay
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 30,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFF8F8F8),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Content
+                            Positioned(
+                              left: 24,
+                              bottom: 80,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'MEET THE NEW\nAUTUMN\nCOLLECTION',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800,
+                                      height: 1.2,
+                                      letterSpacing: -0.5,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 14,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(28),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Shop now',
+                                          style: GoogleFonts.inter(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                        // Bottom rounded corner overlay
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 30,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFF8F8F8),
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30),
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Content
-                        Positioned(
-                          left: 24,
-                          bottom: 80,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'MEET THE NEW\nAUTUMN\nCOLLECTION',
-                                style: GoogleFonts.inter(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.2,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 14,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(28),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Shop now',
-                                      style: GoogleFonts.inter(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.arrow_forward,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Popular Categories
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Popular categories',
-                          style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Icon(Icons.arrow_forward, size: 20),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Categories List
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 50,
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildCategoryChip('Women', true),
-                        _buildCategoryChip('Men', false),
-                        _buildCategoryChip('Kids', false),
-                        _buildCategoryChip('Beauty', false),
-                        _buildCategoryChip('Accessories', false),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // New Arrival
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'New arrival',
-                          style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Icon(Icons.arrow_forward, size: 20),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Products Grid
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.65,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                    delegate: SliverChildListDelegate([
-                      _buildProductCard(
-                        'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400',
-                        'Tweed Waistcoat',
-                        '\$29.00',
-                        true,
-                        true,
-                      ),
-                      _buildProductCard(
-                        'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400',
-                        'Denim Jacket',
-                        '\$34.90',
-                        false,
-                        false,
-                      ),
-                      _buildProductCard(
-                        'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400',
-                        'Casual Blazer',
-                        '\$49.90',
-                        false,
-                        false,
-                      ),
-                      _buildProductCard(
-                        'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400',
-                        'Leather Jacket',
-                        '\$89.90',
-                        true,
-                        false,
-                      ),
-                    ]),
-                  ),
-                ),
-
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
-              ],
-            ),
-
-            // Tap area to close search
-            if (_isSearching)
-              Positioned.fill(
-                child: GestureDetector(
-                  onTap: _toggleSearch,
-                  child: Container(color: Colors.transparent),
-                ),
-              ),
-
-            // Fixed Header on top - After blur so it stays on top and clear
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                decoration: _isSearching
-                    ? null
-                    : BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withOpacity(0.95),
-                            Colors.white.withOpacity(0.0),
                           ],
                         ),
                       ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: AnimatedBuilder(
-                      animation: _searchAnimation,
-                      builder: (context, child) {
-                        final screenWidth =
-                            MediaQuery.of(context).size.width - 32;
-                        final searchWidth =
-                            44 + (screenWidth - 44) * _searchAnimation.value;
-
-                        return SizedBox(
-                          height: 44,
-                          child: Stack(
-                            children: [
-                              // Search Button/Bar - Animates from left
-                              Positioned(
-                                left: 0,
-                                top: 0,
-                                child: GestureDetector(
-                                  onTap: _isSearching ? null : _toggleSearch,
-                                  child: Container(
-                                    width: searchWidth,
-                                    height: 44,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(22),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const SizedBox(width: 12),
-                                        const Icon(Icons.search, size: 22),
-                                        if (_searchAnimation.value > 0.3) ...[
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Opacity(
-                                              opacity:
-                                                  (_searchAnimation.value -
-                                                      0.3) /
-                                                  0.7,
-                                              child: TextField(
-                                                controller: _searchController,
-                                                focusNode: _searchFocusNode,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      'Search products...',
-                                                  hintStyle: GoogleFonts.inter(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  border: InputBorder.none,
-                                                  isDense: true,
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                ),
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Opacity(
-                                            opacity:
-                                                (_searchAnimation.value - 0.3) /
-                                                0.7,
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.close,
-                                                size: 20,
-                                              ),
-                                              onPressed: _toggleSearch,
-                                              padding: EdgeInsets.zero,
-                                              constraints: const BoxConstraints(
-                                                minWidth: 40,
-                                                minHeight: 40,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 4),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              // Shop Name - Fades out and moves
-                              if (_searchAnimation.value < 0.7)
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  top: 0,
-                                  child: IgnorePointer(
-                                    ignoring: _searchAnimation.value > 0,
-                                    child: Opacity(
-                                      opacity:
-                                          1.0 -
-                                          (_searchAnimation.value / 0.7).clamp(
-                                            0.0,
-                                            1.0,
-                                          ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const SizedBox(width: 44),
-                                          Expanded(
-                                            child: Center(
-                                              child: Text(
-                                                'GetDealsFromUSA',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  letterSpacing: 0.3,
-                                                  color: Colors.black,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 44),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                              // Cart Button - Fades out
-                              if (_searchAnimation.value < 0.7)
-                                Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  child: IgnorePointer(
-                                    ignoring: _searchAnimation.value > 0,
-                                    child: Opacity(
-                                      opacity:
-                                          1.0 -
-                                          (_searchAnimation.value / 0.7).clamp(
-                                            0.0,
-                                            1.0,
-                                          ),
-                                      child: GestureDetector(
-                                        onTap: _toggleCart,
-                                        child: Container(
-                                          width: 44,
-                                          height: 44,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(
-                                                  0.1,
-                                                ),
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: const Icon(
-                                            Icons.shopping_bag_outlined,
-                                            size: 22,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        );
-                      },
                     ),
-                  ),
-                ),
-              ),
-            ),
 
-            // Tap area to close cart
-            AnimatedBuilder(
-              animation: _cartAnimationController,
-              builder: (context, child) {
-                if (_cartAnimationController.value == 0) {
-                  return const SizedBox.shrink();
-                }
-                return Positioned.fill(
-                  child: IgnorePointer(
-                    ignoring: !_isCartOpen,
+                    // Popular Categories
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Popular categories',
+                              style: GoogleFonts.inter(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Categories List
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 50,
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            _buildCategoryChip('Women', true),
+                            _buildCategoryChip('Men', false),
+                            _buildCategoryChip('Kids', false),
+                            _buildCategoryChip('Beauty', false),
+                            _buildCategoryChip('Accessories', false),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // New Arrival
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'New arrival',
+                              style: GoogleFonts.inter(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Products Grid
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.65,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
+                        delegate: SliverChildListDelegate([
+                          _buildProductCard(
+                            'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400',
+                            'Tweed Waistcoat',
+                            '\$29.00',
+                            true,
+                            true,
+                          ),
+                          _buildProductCard(
+                            'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400',
+                            'Denim Jacket',
+                            '\$34.90',
+                            false,
+                            false,
+                          ),
+                          _buildProductCard(
+                            'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400',
+                            'Casual Blazer',
+                            '\$49.90',
+                            false,
+                            false,
+                          ),
+                          _buildProductCard(
+                            'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400',
+                            'Leather Jacket',
+                            '\$89.90',
+                            true,
+                            false,
+                          ),
+                        ]),
+                      ),
+                    ),
+
+                    const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                  ],
+                ),
+
+                // Tap area to close search
+                if (_isSearching)
+                  Positioned.fill(
                     child: GestureDetector(
-                      onTap: _toggleCart,
+                      onTap: _toggleSearch,
                       child: Container(color: Colors.transparent),
                     ),
                   ),
-                );
-              },
-            ),
 
-            // Cart Popup Animation - AFTER blur so it's on top and clear
-            AnimatedBuilder(
-              animation: _cartAnimationController,
-              builder: (context, child) {
-                if (_cartAnimationController.value == 0) {
-                  return const SizedBox.shrink();
-                }
-                return Positioned(
+                // Fixed Header on top - After blur so it stays on top and clear
+                Positioned(
                   top: 0,
+                  left: 0,
                   right: 0,
-                  child: SafeArea(
-                    child: Builder(
-                      builder: (context) {
-                        final screenWidth = MediaQuery.of(context).size.width;
-                        final screenHeight = MediaQuery.of(context).size.height;
-
-                        // Phase 1: Width animation from right to left
-                        final cartWidth =
-                            44 +
-                            (screenWidth - 44 - 32) * _cartWidthAnimation.value;
-
-                        // Phase 2: Height animation from top to bottom
-                        final cartHeight =
-                            44 +
-                            (screenHeight * 0.6) * _cartHeightAnimation.value;
-
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 16, right: 16),
-                          child: Container(
-                            width: cartWidth,
-                            height: cartHeight,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(22),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 4),
-                                ),
+                  child: Container(
+                    decoration: _isSearching
+                        ? null
+                        : BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.white.withOpacity(0.95),
+                                Colors.white.withOpacity(0.0),
                               ],
                             ),
-                            child: _cartHeightAnimation.value > 0.3
-                                ? Column(
-                                    children: [
-                                      // Header
-                                      Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Shopping Cart',
-                                              style: GoogleFonts.inter(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700,
+                          ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: AnimatedBuilder(
+                          animation: _searchAnimation,
+                          builder: (context, child) {
+                            final screenWidth =
+                                MediaQuery.of(context).size.width - 32;
+                            final searchWidth =
+                                44 +
+                                (screenWidth - 44) * _searchAnimation.value;
+
+                            return SizedBox(
+                              height: 44,
+                              child: Stack(
+                                children: [
+                                  // Search Button/Bar - Animates from left
+                                  Positioned(
+                                    left: 0,
+                                    top: 0,
+                                    child: GestureDetector(
+                                      onTap: _isSearching
+                                          ? null
+                                          : _toggleSearch,
+                                      child: Container(
+                                        width: searchWidth,
+                                        height: 44,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.1,
                                               ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: _toggleCart,
-                                              child: Container(
-                                                width: 32,
-                                                height: 32,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.close,
-                                                  size: 18,
-                                                ),
-                                              ),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 2),
                                             ),
                                           ],
                                         ),
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(width: 12),
+                                            const Icon(Icons.search, size: 22),
+                                            if (_searchAnimation.value >
+                                                0.3) ...[
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Opacity(
+                                                  opacity:
+                                                      (_searchAnimation.value -
+                                                          0.3) /
+                                                      0.7,
+                                                  child: TextField(
+                                                    controller:
+                                                        _searchController,
+                                                    focusNode: _searchFocusNode,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          'Search products...',
+                                                      hintStyle:
+                                                          GoogleFonts.inter(
+                                                            fontSize: 14,
+                                                            color: Colors.grey,
+                                                          ),
+                                                      border: InputBorder.none,
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                    ),
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Opacity(
+                                                opacity:
+                                                    (_searchAnimation.value -
+                                                        0.3) /
+                                                    0.7,
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                    Icons.close,
+                                                    size: 20,
+                                                  ),
+                                                  onPressed: _toggleSearch,
+                                                  padding: EdgeInsets.zero,
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                        minWidth: 40,
+                                                        minHeight: 40,
+                                                      ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                            ],
+                                          ],
+                                        ),
                                       ),
+                                    ),
+                                  ),
 
-                                      // Cart Items
-                                      Expanded(
+                                  // Shop Name - Fades out and moves
+                                  if (_searchAnimation.value < 0.7)
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      top: 0,
+                                      child: IgnorePointer(
+                                        ignoring: _searchAnimation.value > 0,
                                         child: Opacity(
                                           opacity:
-                                              (_cartHeightAnimation.value -
-                                                  0.3) /
-                                              0.7,
-                                          child: ListView(
-                                            padding: const EdgeInsets.all(16),
+                                              1.0 -
+                                              (_searchAnimation.value / 0.7)
+                                                  .clamp(0.0, 1.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              _buildCartItem(
-                                                'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
-                                                'Tweed Waistcoat',
-                                                '\$29.00',
-                                                1,
+                                              const SizedBox(width: 44),
+                                              Expanded(
+                                                child: Center(
+                                                  child: Text(
+                                                    'GetDealsFromUSA',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      letterSpacing: 0.3,
+                                                      color: Colors.black,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
                                               ),
-                                              const SizedBox(height: 12),
-                                              _buildCartItem(
-                                                'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
-                                                'Denim Jacket',
-                                                '\$34.90',
-                                                2,
-                                              ),
+                                              const SizedBox(width: 44),
                                             ],
                                           ),
                                         ),
                                       ),
+                                    ),
 
-                                      // Checkout Button
-                                      Opacity(
-                                        opacity:
-                                            (_cartHeightAnimation.value - 0.3) /
-                                            0.7,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade50,
-                                            borderRadius:
-                                                const BorderRadius.vertical(
-                                                  bottom: Radius.circular(22),
-                                                ),
+                                  // Cart Button - Fades out
+                                  if (_searchAnimation.value < 0.7)
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: IgnorePointer(
+                                        ignoring: _searchAnimation.value > 0,
+                                        child: Opacity(
+                                          opacity:
+                                              1.0 -
+                                              (_searchAnimation.value / 0.7)
+                                                  .clamp(0.0, 1.0),
+                                          child: GestureDetector(
+                                            onTap: _toggleCart,
+                                            child: Container(
+                                              width: 44,
+                                              height: 44,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.1),
+                                                    blurRadius: 10,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Icon(
+                                                Icons.shopping_bag_outlined,
+                                                size: 22,
+                                              ),
+                                            ),
                                           ),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Total',
-                                                    style: GoogleFonts.inter(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Tap area to close cart
+                AnimatedBuilder(
+                  animation: _cartAnimationController,
+                  builder: (context, child) {
+                    if (_cartAnimationController.value == 0) {
+                      return const SizedBox.shrink();
+                    }
+                    return Positioned.fill(
+                      child: IgnorePointer(
+                        ignoring: !_isCartOpen,
+                        child: GestureDetector(
+                          onTap: _toggleCart,
+                          child: Container(color: Colors.transparent),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                // Cart Popup Animation - AFTER blur so it's on top and clear
+                AnimatedBuilder(
+                  animation: _cartAnimationController,
+                  builder: (context, child) {
+                    if (_cartAnimationController.value == 0) {
+                      return const SizedBox.shrink();
+                    }
+                    return Positioned(
+                      top: 0,
+                      right: 0,
+                      child: SafeArea(
+                        child: Builder(
+                          builder: (context) {
+                            final screenWidth = MediaQuery.of(
+                              context,
+                            ).size.width;
+                            final screenHeight = MediaQuery.of(
+                              context,
+                            ).size.height;
+
+                            // Phase 1: Width animation from right to left
+                            final cartWidth =
+                                44 +
+                                (screenWidth - 44 - 32) *
+                                    _cartWidthAnimation.value;
+
+                            // Phase 2: Height animation from top to bottom
+                            final cartHeight =
+                                44 +
+                                (screenHeight * 0.6) *
+                                    _cartHeightAnimation.value;
+
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 16,
+                                right: 16,
+                              ),
+                              child: Container(
+                                width: cartWidth,
+                                height: cartHeight,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(22),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: _cartHeightAnimation.value > 0.3
+                                    ? Column(
+                                        children: [
+                                          // Header
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Shopping Cart',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: _toggleCart,
+                                                  child: Container(
+                                                    width: 32,
+                                                    height: 32,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade100,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: const Icon(
+                                                      Icons.close,
+                                                      size: 18,
                                                     ),
                                                   ),
-                                                  Text(
-                                                    '\$98.80',
-                                                    style: GoogleFonts.inter(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.w700,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+
+                                          // Cart Items
+                                          Expanded(
+                                            child: Opacity(
+                                              opacity:
+                                                  (_cartHeightAnimation.value -
+                                                      0.3) /
+                                                  0.7,
+                                              child: ListView(
+                                                padding: const EdgeInsets.all(
+                                                  16,
+                                                ),
+                                                children: [
+                                                  _buildCartItem(
+                                                    'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=200',
+                                                    'Tweed Waistcoat',
+                                                    '\$29.00',
+                                                    1,
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  _buildCartItem(
+                                                    'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200',
+                                                    'Denim Jacket',
+                                                    '\$34.90',
+                                                    2,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+
+                                          // Checkout Button
+                                          Opacity(
+                                            opacity:
+                                                (_cartHeightAnimation.value -
+                                                    0.3) /
+                                                0.7,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade50,
+                                                borderRadius:
+                                                    const BorderRadius.vertical(
+                                                      bottom: Radius.circular(
+                                                        22,
+                                                      ),
+                                                    ),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Total',
+                                                        style:
+                                                            GoogleFonts.inter(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                      ),
+                                                      Text(
+                                                        '\$98.80',
+                                                        style:
+                                                            GoogleFonts.inter(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            25,
+                                                          ),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Checkout',
+                                                        style:
+                                                            GoogleFonts.inter(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              const SizedBox(height: 12),
-                                              Container(
-                                                width: double.infinity,
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black,
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    'Checkout',
-                                                    style: GoogleFonts.inter(
-                                                      color: Colors.white,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
+                                        ],
+                                      )
+                                    : Center(
+                                        child: Icon(
+                                          Icons.shopping_bag_outlined,
+                                          size: 22,
+                                          color: Colors.black,
                                         ),
                                       ),
-                                    ],
-                                  )
-                                : Center(
-                                    child: Icon(
-                                      Icons.shopping_bag_outlined,
-                                      size: 22,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(Icons.home_filled, 0),
-                _buildNavItem(Icons.favorite_border, 1),
-                _buildNavItem(Icons.shopping_bag_outlined, 2),
-                _buildNavItem(Icons.person_outline, 3),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(Icons.home_filled, 0),
+                    _buildNavItem(Icons.favorite_border, 1),
+                    _buildNavItem(Icons.shopping_bag_outlined, 2),
+                    _buildNavItem(Icons.person_outline, 3),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
-    ),
-        
-        // Global blur overlay for search - covers entire screen including bottom nav
+
+        // Global blur overlay for search - excludes header area (top 100px)
         if (_isSearching)
-          Positioned.fill(
+          Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            bottom: 0,
             child: IgnorePointer(
               child: AnimatedBuilder(
                 animation: _searchAnimation,
@@ -808,15 +848,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
           ),
-        
-        // Global blur overlay for cart - covers entire screen including bottom nav
+
+        // Global blur overlay for cart - excludes header/cart area (top 100px)
         AnimatedBuilder(
           animation: _cartAnimationController,
           builder: (context, child) {
             if (_cartAnimationController.value == 0) {
               return const SizedBox.shrink();
             }
-            return Positioned.fill(
+            return Positioned(
+              top: 100,
+              left: 0,
+              right: 0,
+              bottom: 0,
               child: IgnorePointer(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
